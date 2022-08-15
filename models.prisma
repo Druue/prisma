@@ -1,0 +1,20 @@
+model blogpost {
+	title TEXT? @Id
+	author_name TEXT? 
+	private BOOLEAN? 
+	publication_date DATETIME? 
+	popularity REAL 
+}
+
+model user {
+	name TEXT? @Id
+	age INTEGER 
+	id INTEGER? 
+}
+
+model comment {
+	id TEXT? @Id
+	author_name TEXT? 
+	blogpost_title TEXT? 
+	contents TEXT? 
+}
