@@ -81,7 +81,6 @@ const db = new DB("example.sqlite");
 const names = getTableNames(db);
 const models: string[] = names.map(([name]) => {
   const rows = getTableInfo(name, db);
-  console.log(rows);
   const details = rows.map((row) => convertToDetails(row));
   return generateModel(name, details);
 });
