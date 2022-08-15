@@ -3,13 +3,13 @@ import { DB, Row } from "https://deno.land/x/sqlite@v3.4.0/mod.ts";
 interface Details {
   columnId: number;
   name: string;
-  type: string;
+  type: Type;
   nullable: boolean;
   default: string;
   isPrimary: boolean;
 }
 
-enum Type {
+export enum Type {
   "TEXT" = "String",
   "BOOLEAN" = "Boolean",
   "INTEGER" = "Int",
@@ -17,24 +17,24 @@ enum Type {
   "REAL" = "Float",
 }
 
-const convertType = (field: unknown): string => {
+export const convertType = (field: unknown): Type => {
   if (!field) throw new Error("this shouldn't happen");
 
   switch (field) {
     case "TEXT":
-      return "String";
+      return Type.TEXT;
 
     case "BOOLEAN":
-      return "Boolean";
+      return Type.BOOLEAN;
 
     case "INTEGER":
-      return "Int";
+      return Type.INTEGER;
 
     case "DATETIME":
-      return "DateTime";
+      return Type.DATETIME;
 
     case "REAL":
-      return "Float";
+      return Type.REAL;
 
     default:
       throw new Error(`Found Invalid Type - ${field}`);
@@ -70,7 +70,7 @@ const formatLine = (details: Details) =>
     details.isPrimary ? "@id" : ""
   }`;
 
-const generateModel = (name: string, details?: Details[]) => {
+export const generateModel = (name: string, details?: Details[]) => {
   return `model ${name} {\n\t${
     details ? details.map((d) => `${formatLine(d)}`).join("\n\t") : ""
   }\n}\n`;
