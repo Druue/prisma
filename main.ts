@@ -9,6 +9,14 @@ interface Details {
   isPrimary: boolean;
 }
 
+enum Type {
+  "TEXT" = "String",
+  "BOOLEAN" = "Boolean",
+  "INTEGER" = "Int",
+  "DATETIME" = "DateTime",
+  "REAL" = "Float",
+}
+
 const convertType = (field: unknown): string => {
   if (!field) throw new Error("this shouldn't happen");
 
@@ -32,6 +40,13 @@ const convertType = (field: unknown): string => {
       throw new Error(`Found Invalid Type - ${field}`);
   }
 };
+
+// const convertType = (field: unknown) => {
+//   if (!field) throw new Error("this shouldn't happen");
+
+//   let key: keyof typeof Type = field as any;
+//   return Type[key];
+// };
 
 const convertToDetails = (row: Row): Details => ({
   columnId: row[0] as number,
@@ -66,6 +81,7 @@ const db = new DB("example.sqlite");
 const names = getTableNames(db);
 const models: string[] = names.map(([name]) => {
   const rows = getTableInfo(name, db);
+  console.log(rows);
   const details = rows.map((row) => convertToDetails(row));
   return generateModel(name, details);
 });
