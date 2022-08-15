@@ -9,11 +9,35 @@ interface Details {
   isPrimary: boolean;
 }
 
+const convertType = (field: unknown): string => {
+  if (!field) throw new Error("this shouldn't happen");
+
+  switch (field) {
+    case "TEXT":
+      return "String";
+
+    case "BOOLEAN":
+      return "Boolean";
+
+    case "INTEGER":
+      return "Int";
+
+    case "DATETIME":
+      return "DateTime";
+
+    case "REAL":
+      return "Float";
+
+    default:
+      throw new Error(`Found Invalid Type - ${field}`);
+  }
+};
+
 const convertToDetails = (row: Row): Details => ({
   columnId: row[0] as number,
   name: row[1] as string,
-  type: row[2] as string,
-  nullable: row[3] as boolean,
+  type: convertType(row[2]),
+  nullable: !row[3] as boolean,
   default: row[4] as string,
   isPrimary: row[5] as boolean,
 });
@@ -28,7 +52,7 @@ const getTableNames = (db: DB) =>
 
 const formatLine = (details: Details) =>
   `${details.name} ${details.type}${details.nullable ? "?" : ""} ${
-    details.isPrimary ? "@Id" : ""
+    details.isPrimary ? "@id" : ""
   }`;
 
 const generateModel = (name: string, details?: Details[]) => {
@@ -46,4 +70,4 @@ const models: string[] = names.map(([name]) => {
   return generateModel(name, details);
 });
 
-await Deno.writeTextFile("./models.prisma", models.join("\n"));
+await Deno.writeTextFile("./schema.prisma", models.join("\n"));

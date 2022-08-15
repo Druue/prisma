@@ -1,0 +1,20 @@
+model blogpost {
+	title String @id
+	author_name String 
+	private Boolean 
+	publication_date DateTime 
+	popularity Float? 
+}
+
+model user {
+	name String @id
+	age Int? 
+	id Int 
+}
+
+model comment {
+	id String @id
+	author_name String 
+	blogpost_title String 
+	contents String 
+}
